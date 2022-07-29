@@ -1,0 +1,65 @@
+Public Sub CreateNewTaskFromSelectedAppointment()
+  Dim obj As Object
+  Dim Sel As Outlook.Selection
+  Dim objAppt As Outlook.AppointmentItem
+  Dim objTask As Outlook.TaskItem
+  Di m objFolder As Outlook.MAPIFolder
+  Dim i As Long
+  
+
+  Set Sel = Application.ActiveExplorer.Selection
+If Sel.Count Then
+  Set obj = Sel(1)
+
+If TypeOf obj Is Outlook.AppointmentItem Then
+  
+      Set objAppt = obj
+      
+For i = 1 To 4
+      
+      Set objTask = Application.CreateItem(olTaskItem)
+
+Select Case i
+
+Case 1
+        objTask.StartDate = objAppt.Start
+        objTask.DueDate = objTask.StartDate + 1
+        objTask.Subject = objAppt.Subject
+  
+Case 2
+        objTask.StartDate = objAppt.Start - 40
+        objTask.DueDate = objTask.StartDate + 1
+        objTask.Subject = objAppt.Subject & " 40 days before "
+
+Case 3
+        objTask.StartDate = objAppt.Start - 80
+        objTask.DueDate = objTask.StartDate + 1
+        objTask.Subject = objAppt.Subject & " 80 days before "
+
+Case 4
+        objTask.StartDate = objAppt.Start - 120
+        objTask.DueDate = objTask.StartDate + 1
+        objTask.Subject = objAppt.Subject & " 120 days before "
+
+End Select
+
+' Fields that will not vary between the tasks go here
+With objTask
+      .Categories = objAppt.Categories
+      .Body = objAppt.Body
+      .Save
+    ' .Display
+End With
+
+Next i
+
+End If
+   
+Quit:
+    Set objTask = Nothing
+    Set obj = Nothing
+     
+End If
+
+End Sub
+
